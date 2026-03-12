@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
     <title>GeoDraw</title>
 </head>
 <body>
@@ -12,40 +12,76 @@
 
     <!-- HEADER -->
     <header class="head">
-        <img src="Group 15.png" class="logo1" alt="GeoDraw">
+        <div class="head-inner">
+            <img src="Group 15.png" class="logo1" alt="GeoDraw" />
 
-        <div class="mode-switch">
-            <button class="switch-btn active">2D</button>
-            <button class="switch-btn">3D</button>
+            <div class="mode-switch">
+                <button class="switch-btn active">2D</button>
+                <button class="switch-btn">3D</button>
+            </div>
+
+            <button class="quest-btn" aria-label="Помощь">
+                <img src="Vector.png" alt="?" />
+            </button>
         </div>
-
-        <button class="quest-btn">
-            <img src="Vector.png" alt="?">
-        </button>
     </header>
 
+    <!-- MAIN (растягивается, чтобы футер был внизу) -->
+    <main class="main">
+        <!-- TOP BUTTONS -->
+        <div class="top-buttons">
 
-   
+            <button class="panel-btn figure-btn">Выбор фигуры</button>
 
+            <div class="figure-menu hidden" id="figureMenu" role="menu" aria-hidden="true">
+                <button class="figure-item" data-type="point">Точка</button>
+                <button class="figure-item" data-type="line">Прямая</button>
+                <button class="figure-item" data-type="ray">Луч</button>
+                <button class="figure-item" data-type="segment">Отрезок</button>
+                <button class="figure-item" data-type="angle">Угол</button>
+                <button class="figure-item" data-type="triangle">Треугольник</button>
+                <button class="figure-item" data-type="rect">Прямоугольник</button>
+                <button class="figure-item" data-type="square">Квадрат</button>
+                <button class="figure-item" data-type="rhombus">Ромб</button>
+                <button class="figure-item" data-type="circle">Окружность</button>
+                <button class="figure-item" data-type="parallelogram">Параллелограмм</button>
+                <button class="figure-item" data-type="trapezoid">Трапеция</button>
+                <button class="figure-item" data-type="polygon">Многоугольник</button>
+                <button class="figure-item" data-type="vector">Вектор</button>
+            </div>
 
-    <!-- TOP BUTTONS -->
-    <div class="top-buttons">
-        <button class="panel-btn">Выбор фигуры</button>
-        <button class="panel-btn">Инструменты</button>
-    </div>
+            <button class="panel-btn tools-btn">Инструменты</button>
 
-    <!-- CANVAS -->
-    <div class="coordinate-plane">
-        <canvas id="plane"></canvas>
-    </div>
+            <div class="tools-menu hidden" id="toolsMenu" role="menu" aria-hidden="true">
+                <button class="tools-item" data-tool="median">Медиана</button>
+                <button class="tools-item" data-tool="height">Высота</button>
+                <button class="tools-item" data-tool="bisector">Биссектриса</button>
+                <button class="tools-item" data-tool="diagonal">Диагональ</button>
+                <button class="tools-item" data-tool="segment">Отрезок</button>
 
-    <!-- FOOTER (как в макете) -->
+                <div class="tools-section-title">Параметры фигуры</div>
+                <div class="tools-params" id="figureParams"></div>
+
+                <div class="tools-section-title">Построения</div>
+                <div class="tools-params" id="figureBuilds"></div>
+            </div>
+
+        </div>
+
+        <!-- CANVAS -->
+        <div class="coordinate-plane">
+            <canvas id="plane" aria-label="Координатная плоскость"></canvas>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
     <footer class="footer">
-        <img src="лого.png" class="footer-logo-img" alt="GeoDraw">
-
-        <div class="mode-switch footer-switch">
-            <button class="switch-btn active">2D</button>
-            <button class="switch-btn">3D</button>
+        <div class="footer-inner">
+            <img src="лого.png" class="footer-logo-img" alt="GeoDraw" />
+            <div class="mode-switch footer-switch">
+                <button class="switch-btn active">2D</button>
+                <button class="switch-btn">3D</button>
+            </div>
         </div>
     </footer>
 

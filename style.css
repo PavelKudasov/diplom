@@ -1,204 +1,199 @@
-* {
-    box-sizing: border-box;
-}
+/* =========================
+   GeoDraw — style.css
+   Исправлено: корректный footer на мобильных
+   ========================= */
 
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
 body {
-    background-color: white;
-    margin: 0;
-    overflow-x: hidden;
     font-family: Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #ffffff;
+    color: #111;
+    overflow-x: hidden; /* предотвращаем горизонтальную прокрутку */
 }
 
-/* ОБЩИЙ КОНТЕЙНЕР */
+/* Wrapper: занимает всю высоту, чтобы футер можно было прижать к низу */
 .wrapper {
-    width: 375px;
+    width: 100%;
+    max-width: 1440px;
     min-height: 100vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
-/* HEADER — теперь с 2D/3D */
+/* HEAD: фон растягивается на всю ширину окна, контент центрируется внутри head-inner */
 .head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-}
-
-.logo1 {
-    width: 150px;
-}
-
-.quest-btn {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 40px;
-    height: 40px;
-
-    z-index: 20; /* поверх канваса */
-    position: relative;
-}
-
-.quest-btn img {
     width: 100%;
-    height: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
 }
 
-
-/* 2D/3D */
-
-
-.switch-btn {
-    width: 69px;
-    height: 40px;
-    border-radius: 50px;
-    font-size: 18px;
-    border: 2px solid #1e90ff;
-    background: white;
-    color: #1e90ff;
-    cursor: pointer;
-}
-
-.switch-btn.active {
-    background: #1e90ff;
-    color: white;
-}
-
-/* TOP BUTTONS — округлые и кликабельные */
-.top-buttons {
+.head-inner {
+    width: 100%;
+    max-width: 375px;
     display: flex;
     justify-content: space-between;
-    padding: 0 5px;
-    margin-top: 15px;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+}
+
+/* Логотип */
+.logo1 { width: 140px; max-width: 40%; height: auto; object-fit: contain; }
+
+/* Quest button */
+.quest-btn { background: none; border: none; cursor: pointer; width: 40px; height: 40px; padding: 0; display: inline-flex; align-items: center; justify-content: center; z-index: 30; }
+.quest-btn img { width: 100%; height: 100%; display: block; }
+
+/* Segmented control 2D/3D */
+.mode-switch { display: inline-flex; gap: 6px; background: #eaf4ff; padding: 6px; border-radius: 999px; align-items: center; box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset; }
+.switch-btn {
+    appearance: none; -webkit-appearance: none;
+    border: 2px solid transparent; background: transparent; color: #1e90ff;
+    padding: 8px 14px; border-radius: 999px; font-size: 15px; cursor: pointer;
+    transition: background 160ms, color 160ms, transform 120ms, box-shadow 160ms;
+}
+.switch-btn:not(.active):hover { background: rgba(30,144,255,0.08); }
+.switch-btn.active { background: linear-gradient(180deg,#1e90ff,#1673d6); color: #fff; box-shadow: 0 6px 18px rgba(30,144,255,0.18); transform: translateY(-1px); }
+.switch-btn:focus { box-shadow: 0 0 0 4px rgba(30,144,255,0.12); }
+.footer-switch .switch-btn { padding: 8px 12px; font-size: 14px; }
+
+/* MAIN: растягивается, чтобы футер был внизу */
+.main {
+    width: 100%;
+    max-width: 375px;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 12px 18px 12px;
+    box-sizing: border-box;
+}
+
+/* TOP BUTTONS */
+.top-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    position: relative;
+    gap: 10px;
 }
 
 .panel-btn {
-    width: 160px;
-    height: 40px;
+    flex: 1 1 48%;
+    min-width: 120px;
+    height: 44px;
     background: #1e90ff;
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 22px;
     font-size: 16px;
     cursor: pointer;
-    z-index: 10; /* поверх канваса */
-    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 120ms, box-shadow 120ms;
 }
+.panel-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30,144,255,0.12); }
+
+/* Dropdown menus */
+.figure-menu, .tools-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    background: #fff;
+    border: 1px solid #d6d6d6;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 60;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    min-width: 160px;
+}
+.figure-menu { left: 8px; }
+.tools-menu { right: 8px; }
+.figure-menu.hidden, .tools-menu.hidden { display: none; }
+.figure-item, .tools-item { padding: 8px 10px; background: #f6f7f8; border: none; border-radius: 8px; text-align: left; cursor: pointer; font-size: 14px; }
+.figure-item:hover, .tools-item:hover { background: #eef4fb; }
+.tools-section-title { margin-top: 8px; font-weight: 600; font-size: 14px; color: #222; }
+.tools-params { min-height: 44px; background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 8px; font-size: 13px; color: #333; }
 
 /* CANVAS */
 .coordinate-plane {
-    width: 350px;
-    height: 900px;
-    margin: 20px auto 0 auto;
-    border: 2px solid #ccc;
-    position: relative;
-    z-index: 1;
-}
-
-#plane {
     width: 100%;
-    height: 100%;
+    max-width: 900px;
+    aspect-ratio: 1 / 1;
+    margin: 18px auto 0 auto;
+    border: 2px solid #e0e0e0;
+    position: relative;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#plane { width: 100%; height: 100%; display: block; }
+
+/* FOOTER: фон растягивается, внутренний контент центрируется */
+.footer {
+    width: 100%;
+    background: #3B82F6;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 0;
 }
 
-/* FOOTER */
-.footer {
-    width: 375px;
-    height: 200px;
-    background: #3B82F6;
-    border-top: 1px solid #ddd;
-
+.footer-inner {
+    width: 100%;
+    max-width: 375px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 18px 12px;
+    box-sizing: border-box;
 }
 
-.footer-logo-img {
-    width: 150px;
-    margin-bottom: 10px;
-}
+.footer-logo-img { width: 140px; margin-bottom: 10px; }
+.footer-switch { display: flex; gap: 12px; }
 
-.footer-switch {
-    display: flex;
-    gap: 20px;
-}
-
-/* ПК-ВЕРСТКА */
+/* Desktop layout */
 @media (min-width: 1024px) {
 
-    body {
-        background: #f0f0f0;
-    }
+    body { background: #f0f0f0; display: flex; justify-content: center; }
 
-    .wrapper {
-        width: 100%;
-        max-width: 100%;
-        min-height: 100vh;
-    }
+    .wrapper { max-width: 1440px; min-height: 100vh; align-items: center; }
 
-    /* HEADER — full width */
-    .head {
-        width: 100%;
-        height: 120px;
-        padding: 0 130px;
-    }
+    .head { width: 100%; }
+    .head-inner { max-width: 1440px; padding: 0 130px; }
 
-    .logo1 {
-        width: 220px;
-    }
+    .logo1 { width: 220px; }
 
-    .quest {
-        width: 50px;
-        height: 50px;
-    }
+    .mode-switch { gap: 12px; padding: 8px; }
+    .switch-btn { padding: 10px 26px; font-size: 18px; }
 
-    .mode-switch {
-        gap: 20px;
-    }
+    .main { max-width: 1440px; padding: 0 130px 40px 130px; }
 
-    .switch-btn {
-        width: 110px;
-        height: 50px;
-        font-size: 20px;
-    }
+    .top-buttons { width: 100%; margin-top: 20px; display: flex; justify-content: center; gap: 40px; }
+    .panel-btn { width: 260px; height: 50px; border-radius: 25px; font-size: 20px; }
 
-    /* КНОПКИ */
-    .top-buttons {
-        margin-top: 20px;
-        padding: 0 130px;
-    }
+    .figure-menu { top: 60px; left: 50%; transform: translateX(-130px); min-width: 220px; }
+    .tools-menu { top: 60px; right: 50%; transform: translateX(130px); min-width: 260px; }
 
-    .panel-btn {
-        width: 260px;
-        height: 50px;
-        border-radius: 25px;
-        font-size: 20px;
-    }
+    .coordinate-plane { width: 900px; height: 900px; margin-top: 40px; aspect-ratio: auto; }
+    #plane { width: 900px; height: 900px; }
 
-    /* CANVAS — по центру */
-    .coordinate-plane {
-        width: 900px;
-        height: 900px;
-        margin: 40px auto 0 auto;
-    }
-
-    /* FOOTER — full width */
-    .footer {
-        width: 100%;
-        height: 200px;
-        margin-top: 40px;
-    }
-
-    .footer-switch .switch-btn {
-        width: 110px;
-        height: 50px;
-        font-size: 20px;
-    }
+    .footer { width: 100%; }
+    .footer-inner { max-width: 1440px; padding: 20px 130px; flex-direction: row; justify-content: space-between; align-items: center; }
+    .footer-logo-img { width: 180px; }
+    .footer-switch .switch-btn { padding: 10px 20px; font-size: 17px; }
 }
