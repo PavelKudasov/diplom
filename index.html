@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>GeoDraw</title>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <!-- HEADER -->
+    <header class="head">
+        <img src="Group 15.png" class="logo1" alt="GeoDraw">
+
+        <div class="mode-switch">
+            <button class="switch-btn active">2D</button>
+            <button class="switch-btn">3D</button>
+        </div>
+
+        <button class="quest-btn">
+            <img src="Vector.png" alt="?">
+        </button>
+    </header>
+
+
+   
+
+
+    <!-- TOP BUTTONS -->
+    <div class="top-buttons">
+        <button class="panel-btn">Выбор фигуры</button>
+        <button class="panel-btn">Инструменты</button>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="coordinate-plane">
+        <canvas id="plane"></canvas>
+    </div>
+
+    <!-- FOOTER (как в макете) -->
+    <footer class="footer">
+        <img src="лого.png" class="footer-logo-img" alt="GeoDraw">
+
+        <div class="mode-switch footer-switch">
+            <button class="switch-btn active">2D</button>
+            <button class="switch-btn">3D</button>
+        </div>
+    </footer>
+
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

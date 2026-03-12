@@ -1,0 +1,204 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    margin: 0;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* ОБЩИЙ КОНТЕЙНЕР */
+.wrapper {
+    width: 375px;
+    min-height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER — теперь с 2D/3D */
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+}
+
+.logo1 {
+    width: 150px;
+}
+
+.quest-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    z-index: 20; /* поверх канваса */
+    position: relative;
+}
+
+.quest-btn img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* 2D/3D */
+
+
+.switch-btn {
+    width: 69px;
+    height: 40px;
+    border-radius: 50px;
+    font-size: 18px;
+    border: 2px solid #1e90ff;
+    background: white;
+    color: #1e90ff;
+    cursor: pointer;
+}
+
+.switch-btn.active {
+    background: #1e90ff;
+    color: white;
+}
+
+/* TOP BUTTONS — округлые и кликабельные */
+.top-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    margin-top: 15px;
+}
+
+.panel-btn {
+    width: 160px;
+    height: 40px;
+    background: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10; /* поверх канваса */
+    position: relative;
+}
+
+/* CANVAS */
+.coordinate-plane {
+    width: 350px;
+    height: 900px;
+    margin: 20px auto 0 auto;
+    border: 2px solid #ccc;
+    position: relative;
+    z-index: 1;
+}
+
+#plane {
+    width: 100%;
+    height: 100%;
+}
+
+/* FOOTER */
+.footer {
+    width: 375px;
+    height: 200px;
+    background: #3B82F6;
+    border-top: 1px solid #ddd;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-logo-img {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.footer-switch {
+    display: flex;
+    gap: 20px;
+}
+
+/* ПК-ВЕРСТКА */
+@media (min-width: 1024px) {
+
+    body {
+        background: #f0f0f0;
+    }
+
+    .wrapper {
+        width: 100%;
+        max-width: 100%;
+        min-height: 100vh;
+    }
+
+    /* HEADER — full width */
+    .head {
+        width: 100%;
+        height: 120px;
+        padding: 0 130px;
+    }
+
+    .logo1 {
+        width: 220px;
+    }
+
+    .quest {
+        width: 50px;
+        height: 50px;
+    }
+
+    .mode-switch {
+        gap: 20px;
+    }
+
+    .switch-btn {
+        width: 110px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    /* КНОПКИ */
+    .top-buttons {
+        margin-top: 20px;
+        padding: 0 130px;
+    }
+
+    .panel-btn {
+        width: 260px;
+        height: 50px;
+        border-radius: 25px;
+        font-size: 20px;
+    }
+
+    /* CANVAS — по центру */
+    .coordinate-plane {
+        width: 900px;
+        height: 900px;
+        margin: 40px auto 0 auto;
+    }
+
+    /* FOOTER — full width */
+    .footer {
+        width: 100%;
+        height: 200px;
+        margin-top: 40px;
+    }
+
+    .footer-switch .switch-btn {
+        width: 110px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
