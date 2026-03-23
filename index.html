@@ -1,92 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="style.css" />
-    <title>GeoDraw</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GeoDraw</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<div class="wrapper">
+  <div class="wrapper">
 
     <!-- HEADER -->
     <header class="head">
-        <div class="head-inner">
-            <img src="Group 15.png" class="logo1" alt="GeoDraw" />
-
-            <div class="mode-switch">
-                <button class="switch-btn active">2D</button>
-                <button class="switch-btn">3D</button>
-            </div>
-
-            <button class="quest-btn" aria-label="Помощь">
-                <img src="Vector.png" alt="?" />
-            </button>
+      <div class="head-inner">
+        <img src="Group 15.png" class="logo1" alt="GeoDraw" />
+        <div class="mode-switch">
+          <button class="switch-btn active" type="button">2D</button>
+          <button class="switch-btn" type="button">3D</button>
         </div>
+        <button class="quest-btn" aria-label="Помощь" type="button">
+          <img src="Vector.png" alt="?" />
+        </button>
+        <div id="helpPopup" class="help-popup hidden">
+          <div class="help-content">
+            <div class="help-title">Справка</div>
+            <div class="help-text">
+              <p><b>Холст:</b> двигайте зажатой мышкой, масштабируйте колёсиком или кнопками +/–.</p>
+              <p><b>Фигуры:</b> выберите иконку внизу (треугольник, круг и др.). Параметры задавайте в окне справа.</p>
+              <p><b>Построения:</b> нажмите медиану, высоту и т.п., затем вводите значение.</p>
+              <p><b>Перо:</b> рисуйте вручную.</p>
+              <p><b>Правка:</b> перетаскивайте вершины мышкой; двойной клик по точке.</p>
+              <p><b>Отмена/повтор:</b> кнопки ↩ ↪.</p>
+            </div>
+            <button id="helpClose" class="help-close">Закрыть</button>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <!-- MAIN (растягивается, чтобы футер был внизу) -->
+    <!-- MAIN -->
     <main class="main">
-        <!-- TOP BUTTONS -->
-        <div class="top-buttons">
+      <!-- TOP BUTTONS -->
+      <div class="top-buttons" style="position:relative; width:100%; max-width:900px; margin:0 auto;">
 
-            <button class="panel-btn figure-btn">Выбор фигуры</button>
+        <!-- Figure button -->
+        <button class="panel-btn figure-btn" aria-haspopup="true" aria-expanded="false" type="button">Выбор фигуры ▾</button>
 
-            <div class="figure-menu hidden" id="figureMenu" role="menu" aria-hidden="true">
-                <button class="figure-item" data-type="point">Точка</button>
-                <button class="figure-item" data-type="line">Прямая</button>
-                <button class="figure-item" data-type="ray">Луч</button>
-                <button class="figure-item" data-type="segment">Отрезок</button>
-                <button class="figure-item" data-type="angle">Угол</button>
-                <button class="figure-item" data-type="triangle">Треугольник</button>
-                <button class="figure-item" data-type="rect">Прямоугольник</button>
-                <button class="figure-item" data-type="square">Квадрат</button>
-                <button class="figure-item" data-type="rhombus">Ромб</button>
-                <button class="figure-item" data-type="circle">Окружность</button>
-                <button class="figure-item" data-type="parallelogram">Параллелограмм</button>
-                <button class="figure-item" data-type="trapezoid">Трапеция</button>
-                <button class="figure-item" data-type="polygon">Многоугольник</button>
-                <button class="figure-item" data-type="vector">Вектор</button>
-            </div>
+        <!-- Figure menu -->
+        <div id="figureMenu" class="figure-menu hidden" role="menu" aria-hidden="true" style="position:absolute; left:8px; top:56px;">
+          <button class="figure-item" data-type="point" type="button">Точка</button>
+          <button class="figure-item" data-type="line" type="button">Прямая</button>
+          <button class="figure-item" data-type="ray" type="button">Луч</button>
+          <button class="figure-item" data-type="segment" type="button">Отрезок</button>
+          <button class="figure-item" data-type="angle" type="button">Угол</button>
+          <button class="figure-item" data-type="triangle" type="button">Треугольник</button>
+          <button class="figure-item" data-type="rect" type="button">Прямоугольник</button>
+          <button class="figure-item" data-type="square" type="button">Квадрат</button>
+          <button class="figure-item" data-type="rhombus" type="button">Ромб</button>
+          <button class="figure-item" data-type="circle" type="button">Окружность</button>
+          <button class="figure-item" data-type="parallelogram" type="button">Параллелограмм</button>
+          <button class="figure-item" data-type="trapezoid" type="button">Трапеция</button>
+          <button class="figure-item" data-type="polygon" type="button">Многоугольник</button>
+          <button class="figure-item" data-type="vector" type="button">Вектор</button>
+        </div>
 
-            <button class="panel-btn tools-btn">Инструменты</button>
+        <!-- Tools button -->
+        <button class="panel-btn tools-btn" aria-haspopup="true" aria-expanded="false" type="button" style="margin-left:12px;">Инструменты ▾</button>
 
-            <div class="tools-menu hidden" id="toolsMenu" role="menu" aria-hidden="true">
-                <button class="tools-item" data-tool="median">Медиана</button>
-                <button class="tools-item" data-tool="height">Высота</button>
-                <button class="tools-item" data-tool="bisector">Биссектриса</button>
-                <button class="tools-item" data-tool="diagonal">Диагональ</button>
-                <button class="tools-item" data-tool="segment">Отрезок</button>
-
-                <div class="tools-section-title">Параметры фигуры</div>
-                <div class="tools-params" id="figureParams"></div>
-
-                <div class="tools-section-title">Построения</div>
-                <div class="tools-params" id="figureBuilds"></div>
-            </div>
+        <!-- Tools menu -->
+        <div id="toolsMenu" class="tools-menu hidden" role="menu" aria-hidden="true" style="position:absolute; left:140px; top:56px;">
+          <button class="tool-item" data-construction="median" type="button">Медиана</button>
+          <button class="tool-item" data-construction="bisector" type="button">Биссектриса (из вершины)</button>
+          <button class="tool-item" data-construction="perpBisector" type="button">Перпендикулярный биссектор (по 2 точкам)</button>
+          <button class="tool-item" data-construction="line" type="button">Прямая (по 2 точкам)</button>
+          <button class="tool-item" data-construction="parallel" type="button">Параллельная (ребро + точка)</button>
 
         </div>
 
-        <!-- CANVAS -->
-        <div class="coordinate-plane">
-            <canvas id="plane" aria-label="Координатная плоскость"></canvas>
+      </div>
+
+      <!-- CANVAS AREA -->
+      <div class="coordinate-plane" style="width:100%; max-width:900px; margin:18px auto; position:relative;">
+        <canvas id="plane" aria-label="Координатная плоскость" style="width:700px;height:700px; touch-action:none;"></canvas>
+      </div>
+
+      <!-- PROPS PANEL -->
+      <aside style="width:100%; max-width:320px; margin:0 auto 24px auto;">
+        <div class="props-panel">
+          <div style="font-weight:600;margin-bottom:6px">Свойства фигуры</div>
+          <div style="color:#666;font-size:13px">Выберите фигуру на холсте — здесь появятся её параметры и список построений.</div>
         </div>
+      </aside>
     </main>
 
     <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <img src="лого.png" class="footer-logo-img" alt="GeoDraw" />
-            <div class="mode-switch footer-switch">
-                <button class="switch-btn active">2D</button>
-                <button class="switch-btn">3D</button>
-            </div>
+    <footer class="footer" style="width:100%; margin-top:auto;">
+      <div class="footer-inner">
+        <img src="лого.png" class="footer-logo-img" alt="GeoDraw" />
+        <div class="mode-switch footer-switch">
+          <button class="switch-btn active" type="button">2D</button>
+          <button class="switch-btn" type="button">3D</button>
         </div>
+      </div>
     </footer>
+  </div>
 
-</div>
+  <script src="main.js"></script>
 
-<script src="main.js"></script>
+  <script>
+  (function () {
+    const figureBtn = document.querySelector('.figure-btn');
+    const toolsBtn = document.querySelector('.tools-btn');
+    const figureMenu = document.getElementById('figureMenu');
+    const toolsMenu = document.getElementById('toolsMenu');
+
+    function closeAll() {
+      if (figureMenu) { figureMenu.classList.add('hidden'); figureMenu.setAttribute('aria-hidden','true'); }
+      if (toolsMenu) { toolsMenu.classList.add('hidden'); toolsMenu.setAttribute('aria-hidden','true'); }
+      if (figureBtn) figureBtn.setAttribute('aria-expanded','false');
+      if (toolsBtn) toolsBtn.setAttribute('aria-expanded','false');
+    }
+
+    if (figureBtn && figureMenu) {
+      figureBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const show = figureMenu.classList.contains('hidden');
+        closeAll();
+        if (show) {
+          figureMenu.classList.remove('hidden');
+          figureMenu.setAttribute('aria-hidden','false');
+          figureBtn.setAttribute('aria-expanded','true');
+        }
+      });
+    }
+
+    if (toolsBtn && toolsMenu) {
+      toolsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const show = toolsMenu.classList.contains('hidden');
+        closeAll();
+        if (show) {
+          toolsMenu.classList.remove('hidden');
+          toolsMenu.setAttribute('aria-hidden','false');
+          toolsBtn.setAttribute('aria-expanded','true');
+        }
+      });
+    }
+
+    if (figureMenu) {
+      figureMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
+    if (toolsMenu) {
+      toolsMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    document.addEventListener('click', (e) => {
+      if (
+        !(figureMenu && figureMenu.contains(e.target)) &&
+        !(toolsMenu && toolsMenu.contains(e.target)) &&
+        !(figureBtn && figureBtn.contains(e.target)) &&
+        !(toolsBtn && toolsBtn.contains(e.target))
+      ) {
+        closeAll();
+      }
+    });
+
+    // === ЛОГИКА ДЛЯ КНОПКИ ВОПРОСА ===
+    const helpBtn = document.querySelector('.quest-btn');
+    const helpPopup = document.getElementById('helpPopup');
+    const helpClose = document.getElementById('helpClose');
+
+    if (helpBtn && helpPopup && helpClose) {
+      helpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        helpPopup.classList.remove('hidden');
+      });
+
+      helpClose.addEventListener('click', () => {
+        helpPopup.classList.add('hidden');
+      });
+
+      helpPopup.addEventListener('click', (e) => {
+        if (e.target === helpPopup) helpPopup.classList.add('hidden');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') helpPopup.classList.add('hidden');
+      });
+    }
+
+    // === Режим 2D/3D ===
+    const modeSwitchContainers = document.querySelectorAll('.mode-switch');
+
+    const figureSets = {
+      '2d': [
+        { type: 'point', label: 'Точка' },
+        { type: 'line', label: 'Прямая' },
+        { type: 'ray', label: 'Луч' },
+        { type: 'segment', label: 'Отрезок' },
+        { type: 'angle', label: 'Угол' },
+        { type: 'triangle', label: 'Треугольник' },
+        { type: 'rect', label: 'Прямоугольник' },
+        { type: 'square', label: 'Квадрат' },
+        { type: 'rhombus', label: 'Ромб' },
+        { type: 'circle', label: 'Окружность' },
+        { type: 'parallelogram', label: 'Параллелограмм' },
+        { type: 'trapezoid', label: 'Трапеция' },
+        { type: 'polygon', label: 'Многоугольник' },
+        { type: 'vector', label: 'Вектор' }
+      ],
+      '3d': [
+        { type: 'square3d', label: 'Квадрат' },
+        { type: 'circle3d', label: 'Окружность' },
+        { type: 'cylinder', label: 'Цилиндр' },
+        { type: 'parallelogram3d', label: 'Параллелограмм наклонный' },
+        { type: 'pyramid', label: 'Пирамида' },
+        { type: 'cone', label: 'Конус' },
+        { type: 'triangularPrism', label: 'Треуг. призма' }
+      ]
+    };
+
+    function renderFigureMenu(mode) {
+      if (!figureMenu) return;
+      const items = figureSets[mode] || figureSets['2d'];
+      figureMenu.innerHTML = items.map(item => `\n          <button class="figure-item" data-type="${item.type}" type="button">${item.label}</button>`).join('') + '\n';
+    }
+
+    function setMode(mode) {
+      document.body.dataset.mode = mode;
+      modeSwitchContainers.forEach(container => {
+        const btn = container.querySelector(`.switch-btn[data-mode="${mode}"]`);
+        if (btn) {
+          container.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+      });
+      renderFigureMenu(mode);
+    }
+    modeSwitchContainers.forEach(container => {
+      container.querySelectorAll('.switch-btn').forEach(btn => {
+        const mode = btn.textContent.trim();
+        btn.dataset.mode = mode.toLowerCase();
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetMode = btn.dataset.mode;
+          setMode(targetMode);
+        });
+      });
+    });
+
+    // Установим начальный режим 2D
+    setMode('2d');
+  })();
+</script>
+
 </body>
 </html>
