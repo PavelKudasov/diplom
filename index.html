@@ -26,16 +26,47 @@
         </button>
         <div id="helpPopup" class="help-popup hidden">
           <div class="help-content">
-            <div class="help-title">Справка</div>
-            <div class="help-text">
-              <p><b>Холст:</b> двигайте зажатой мышкой, масштабируйте колёсиком или кнопками +/–.</p>
-              <p><b>Фигуры:</b> выберите иконку внизу (треугольник, круг и др.). Параметры задавайте в окне справа.</p>
-              <p><b>Построения:</b> нажмите медиану, высоту и т.п., затем вводите значение.</p>
-              <p><b>Перо:</b> рисуйте вручную.</p>
-              <p><b>Правка:</b> перетаскивайте вершины мышкой; двойной клик по точке.</p>
-              <p><b>Отмена/повтор:</b> кнопки ↩ ↪.</p>
+            <div class="help-header">
+              <div class="help-title">📐 GeoDraw Справка</div>
+              <button id="helpClose" class="help-close-btn">✕</button>
             </div>
-            <button id="helpClose" class="help-close">Закрыть</button>
+            <div class="help-sections">
+              <div class="help-section">
+                <div class="help-section-icon">🖱️</div>
+                <div class="help-section-content">
+                  <div class="help-section-title">Управление холстом</div>
+                  <div class="help-text">Двигайте зажатой мышкой, масштабируйте колёсиком или кнопками +/–</div>
+                </div>
+              </div>
+              <div class="help-section">
+                <div class="help-section-icon">📏</div>
+                <div class="help-section-content">
+                  <div class="help-section-title">Фигуры</div>
+                  <div class="help-text">Выберите фигуру в меню снизу. Перетаскивайте вершины, вращайте и масштабируйте</div>
+                </div>
+              </div>
+              <div class="help-section">
+                <div class="help-section-icon">⚙️</div>
+                <div class="help-section-content">
+                  <div class="help-section-title">Построения</div>
+                  <div class="help-text">Медиана, биссектриса, перпендикуляр из вершин. Сечения для 3D фигур по 3 точкам</div>
+                </div>
+              </div>
+              <div class="help-section">
+                <div class="help-section-icon">🎯</div>
+                <div class="help-section-content">
+                  <div class="help-section-title">Редактирование</div>
+                  <div class="help-text">Перетаскивайте фигуры мышкой. Используйте ручки для вращения и масштаба</div>
+                </div>
+              </div>
+              <div class="help-section">
+                <div class="help-section-icon">⌨️</div>
+                <div class="help-section-content">
+                  <div class="help-section-title">Горячие клавиши</div>
+                  <div class="help-text">R — сброс трансформации, Стрелки — перемещение, Delete — удалить</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

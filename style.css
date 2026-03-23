@@ -105,36 +105,82 @@ body {
 
 /* ====== МЕНЮ ====== */
 .figure-menu, .tools-menu {
-  position:absolute;
-  top:calc(100% + 12px);
-  background:#fff;
-  border:1px solid #d6d6d6;
-  border-radius:10px;
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  z-index:9999;
-  box-shadow:0 8px 24px rgba(0,0,0,0.08);
-  min-width:160px;
+  position: absolute;
+  top: calc(100% + 12px);
+  background: #fff;
+  border: 1px solid #d6d6d6;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  min-width: 200px;
+  max-height: 70vh;
+  overflow-y: auto;
 }
-.figure-menu.hidden, .tools-menu.hidden { display:none; }
+
+.figure-menu.hidden, .tools-menu.hidden { display: none; }
 
 .figure-item, .tool-item {
-  display:block;
-  width:100%;
-  padding:10px 12px;
-  background:#f6f7f8;
-  border:1px solid transparent;
-  border-radius:10px;
-  text-align:left;
-  font-size:14px;
-  color:#111;
-  cursor:pointer;
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: #f6f7f8;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 14px;
+  color: #111;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+
 .figure-item:hover, .tool-item:hover {
-  background:#eef4fb;
-  border-color:#dbeeff;
+  background: #eef4fb;
+  border-color: #dbeeff;
+  transform: translateX(4px);
+}
+
+/* Адаптив для мобильных - МЕНЮ ПО ЦЕНТРУ ЭКРАНА */
+@media (max-width: 1023px) {
+  .figure-menu, .tools-menu {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 85% !important;
+    max-width: 400px !important;
+    min-width: auto !important;
+    max-height: 60vh !important;
+    padding: 20px !important;
+    background: #fff !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+    border: 2px solid #e0e0e0 !important;
+    z-index: 10000 !important;
+  }
+  
+  .figure-item, .tool-item {
+    padding: 18px 24px !important;
+    font-size: 17px !important;
+    border-radius: 12px !important;
+    background: #f8f9fa !important;
+    border: 2px solid #e9ecef !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .figure-item:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .figure-item:active, .tool-item:active {
+    background: #1e90ff !important;
+    color: #fff !important;
+    border-color: #1e90ff !important;
+    transform: scale(0.97) !important;
+  }
 }
 
 .tools-section-title {
@@ -283,6 +329,17 @@ body {
   padding: 0 14px;
   font-size: 13px;
   font-weight: 500;
+}
+
+/* 3D кнопки вращения */
+#rotation-3d-group {
+  display: none;
+}
+
+#rotation-3d-group .prop-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 14px;
 }
 
 .prop-value {
@@ -478,28 +535,162 @@ body {
 
 /* Адаптив для мобильных */
 @media (max-width: 1023px) {
+  /* Панель свойств */
   .props-panel {
-    padding: 14px;
+    padding: 16px;
     max-height: none;
+    border-radius: 12px;
   }
-  
+
   .prop-info-grid {
     grid-template-columns: 1fr;
+    gap: 6px;
   }
-  
+
   .props-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
-  
+
   .action-group {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .prop-btn-reset {
     width: 100%;
-    margin-top: 4px;
+    margin-top: 8px;
+    height: 44px;
+  }
+  
+  /* Кнопки больше для пальцев */
+  .prop-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  /* 3D кнопки на мобильных */
+  #rotation-3d-group {
+    flex-wrap: wrap;
+  }
+
+  #rotation-3d-group .action-label {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #rotation-3d-group .prop-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+  
+  /* Поля ввода */
+  .prop-input {
+    padding: 10px 12px;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  /* Увеличиваем меню для пальцев */
+  .figure-item, .tool-item {
+    padding: 16px 18px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  /* Кнопки управления */
+  .panel-btn {
+    height: 56px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  /* Меню фигур и инструментов — фиксированное позиционирование */
+  .figure-menu, .tools-menu {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 280px;
+    max-width: calc(100vw - 32px);
+    max-height: 60vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    border: 1px solid #e0e0e0;
+    z-index: 9999;
+  }
+  
+  /* Основная разметка */
+  body { background:#fff; }
+  .wrapper { max-width:100%; align-items:center; }
+  .head-inner { max-width:100%; padding:0 16px; }
+  .logo1 { width:100px; }
+  .main { max-width:100%; padding:0 16px 20px 16px; }
+  .top-buttons { width:100%; margin-top:16px; }
+  
+  /* Канвас */
+  .coordinate-plane {
+    width:100%;
+    max-width:100vw;
+    height:900px;
+    margin-top:24px;
+    border:2px solid #e0e0e0;
+    border-radius: 12px;
+    touch-action: pan-y;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior: contain;
+  }
+  #plane {
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 900px;
+    display: block;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+  }
+  
+  /* Футер */
+  .footer-inner { max-width:100%; padding:16px; flex-direction:column; }
+  .footer-logo-img { width:100px; }
+
+  /* Скролл */
+  html {
+    overflow-x: hidden;
+  }
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100vw;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Убираем подсветку при тапе */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Тосты уведомлений */
+  #logPanel {
+    max-width: calc(100vw - 24px);
+  }
+  
+  /* Help popup */
+  .help-popup {
+    width: calc(100vw - 32px);
+    max-width: 340px;
+  }
+  
+  .help-text p {
+    font-size: 14px;
+    line-height: 1.5;
   }
 }
 
@@ -526,68 +717,6 @@ body {
 .footer-switch { display:flex; gap:12px; }
 .footer-switch .switch-btn { font-size:14px; padding:6px 12px; }
 
-/* ====== МОБИЛЬНЫЕ УСТРОЙСТВА (до 1024px) ====== */
-@media (max-width: 1023px) {
-  body { background:#fff; }
-  .wrapper { max-width:100%; align-items:center; }
-  .head-inner { max-width:100%; padding:0 16px; }
-  .logo1 { width:100px; }
-  .main { max-width:100%; padding:0 16px 20px 16px; }
-  .top-buttons { width:100%; margin-top:16px; }
-  .panel-btn { height:48px; font-size:17px; }
-  .coordinate-plane {
-    width:100%;
-    max-width:100vw;
-    height:900px;
-    margin-top:24px;
-    border:2px solid #e0e0e0;
-    border-radius: 12px;
-    touch-action: pan-y; /* Разрешаем вертикальный скролл */
-    -webkit-touch-callout: none;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  #plane {
-    width: 100%;
-    height: 100%;
-    max-width: 100vw;
-    max-height: 900px;
-    display: block;
-    touch-action: pan-y; /* Разрешаем вертикальный скролл */
-  }
-  .footer-inner { max-width:100%; padding:16px; flex-direction:column; }
-  .footer-logo-img { width:100px; }
-
-  /* Убираем горизонтальный скролл */
-  html {
-    overflow-x: hidden;
-  }
-  body {
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-width: 100vw;
-    touch-action: pan-y; /* Разрешаем только вертикальный скролл */
-    -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
-  }
-
-  /* Адаптация панели свойств */
-  .props-panel {
-    width: 100%;
-    max-width: 100vw;
-    margin-top: 16px;
-  }
-  
-  /* Убираем подсветку при тапе на мобильных */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Важно: разрешаем скролл для всех элементов */
-  .wrapper, .main, .head, .footer {
-    touch-action: pan-y;
-  }
-}
-
 /* ====== DESKTOP (от 1024px) ====== */
 @media (min-width: 1024px) {
   body { background:#f0f0f0; display:flex; justify-content:center; }
@@ -613,24 +742,121 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
-  border-radius: 12px;
-  padding: 20px;
-  width: 320px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  border-radius: 16px;
+  padding: 0;
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   z-index: 9999;
+  overflow: hidden;
 }
+
 .help-popup.hidden { display:none; }
-.help-title { font-size:20px; font-weight:700; margin-bottom:10px; }
-.help-text p { margin:6px 0; line-height:1.35; }
-.help-close {
-  margin-top:12px;
-  width:100%;
-  padding:8px;
-  background:#0ea5a4;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:15px;
+
+.help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #1e90ff, #1673d6);
+  color: white;
 }
-.help-close:hover { background:#0c8c8b; }
+
+.help-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.help-close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.help-close-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.help-sections {
+  padding: 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.help-section {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: transform 0.2s;
+}
+
+.help-section:hover {
+  transform: translateX(4px);
+  background: #f0f4fb;
+}
+
+.help-section:last-child {
+  margin-bottom: 0;
+}
+
+.help-section-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.help-section-content {
+  flex: 1;
+}
+
+.help-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.help-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Адаптив для help popup */
+@media (max-width: 1023px) {
+  .help-popup {
+    width: calc(100vw - 32px);
+  }
+
+  .help-sections {
+    max-height: 50vh;
+  }
+
+  .help-section {
+    padding: 12px;
+  }
+
+  .help-section-icon {
+    font-size: 24px;
+  }
+
+  .help-section-title {
+    font-size: 15px;
+  }
+
+  .help-text {
+    font-size: 13px;
+  }
+}

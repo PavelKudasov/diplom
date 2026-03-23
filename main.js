@@ -1905,10 +1905,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function buildSection(points, shape) {
       if (points.length < 3) return null;
-      const localPoints = points.map(p => shape.worldToLocal(p));
-      const pA = localPoints[0], pB = localPoints[1], pC = localPoints[2];
-      const cons = { type: 'section', points: [pA, pB, pC], meta: {} };
-      return [cons];
+      // Просто сохраняем точки как есть
+      return [{ type: 'section', points: points, meta: {} }];
     }
 
     function drawConstruction(ctx, cons) {
@@ -2041,39 +2039,72 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!shape) return null;
       const sc = screenToCanvas(clientX, clientY);
       const w = screenToWorld(clientX, clientY);
-      
-      // Для сечения — просто проекция на поверхность
+
+      // Для сечения — возвращаем ТОЧНО место клика!
       if (constructionType === 'section') {
-        if (shape.hitTest(w.x, w.y)) {
-          const projected = shape.projectToSurface ? shape.projectToSurface(w.x, w.y) : w;
-          return { point: projected, vertexIndex: null, edge: null };
-        } else { return null; }
+        // Для 3D фигур — ищем вершины/рёбра но возвращаем место клика если не нашли
+        if (shape instanceof CylinderShape || shape instanceof PyramidShape || 
+            shape instanceof ConeShape || shape instanceof TriangularPrismShape) {
+          const verts = shape.getVerticesWorld();
+          let best = { d: Infinity, point: null };
+          
+          // На телефоне увеличенные пороги
+          const isMobile = window.innerWidth <= 1023;
+          const vertexThreshold = isMobile ? 80 : 60;
+          const edgeThreshold = isMobile ? 60 : 40;
+
+          // Ищем ближайшую вершину
+          for (let i = 0; i < verts.length; i++) {
+            const s = worldToScreen(verts[i].x, verts[i].y);
+            const d = Math.hypot(sc.x - s.x, sc.y - s.y);
+            if (d < best.d && d <= vertexThreshold) {
+              best = { d, point: verts[i], isVertex: true };
+            }
+          }
+
+          // Ищем ближайшее ребро
+          if (shape.edges) {
+            for (const edge of shape.edges) {
+              const v1 = verts[edge[0]], v2 = verts[edge[1]];
+              const s1 = worldToScreen(v1.x, v1.y), s2 = worldToScreen(v2.x, v2.y);
+              const dist = pointToSegmentDistance(sc.x, sc.y, s1, s2);
+              if (dist < best.d && dist <= edgeThreshold) {
+                const dx = v2.x - v1.x, dy = v2.y - v1.y;
+                const len2 = dx * dx + dy * dy;
+                let t = ((sc.x - s1.x) * dx + (sc.y - s1.y) * dy) / len2;
+                t = Math.max(0, Math.min(1, t));
+                best = { d: dist, point: { x: v1.x + t * dx, y: v1.y + t * dy }, isEdge: true };
+              }
+            }
+          }
+
+          // Если нашли вершину или ребро — возвращаем их
+          if (best.point) {
+            return { point: best.point, vertexIndex: null, edge: null };
+          }
+          // Если не нашли — возвращаем ТОЧНО место клика в мире
+          return { point: w, vertexIndex: null, edge: null };
+        }
+        // Для 2D — просто место клика
+        return { point: w, vertexIndex: null, edge: null };
       }
-      
-      // Для фигур с вершинами — ищем вершины и рёбра
+
+      // Для 2D фигур
       if (typeof shape.getVerticesWorld === 'function') {
         const verts = shape.getVerticesWorld();
-        
-        // 1) Сначала ищем вершины — приоритет вершинам
         let bestV = { d: Infinity, idx: -1 };
         for (let i = 0; i < verts.length; i++) {
           const s = worldToScreen(verts[i].x, verts[i].y);
-          const dx = sc.x - s.x, dy = sc.y - s.y;
-          const d = Math.hypot(dx, dy);
+          const d = Math.hypot(sc.x - s.x, sc.y - s.y);
           if (d < bestV.d) bestV = { d, idx: i };
         }
-        
-        // Если клик близко к вершине — возвращаем вершину (увеличенный порог)
         if (bestV.d <= getVertexPickThreshold() * 1.2) {
           return { point: verts[bestV.idx], vertexIndex: bestV.idx, edge: null };
         }
-        
-        // 2) Ищем рёбра
         let bestEdge = { d: Infinity, aIdx: -1, bIdx: -1, proj: null };
         for (let i = 0; i < verts.length; i++) {
           const a = verts[i], b = verts[(i + 1) % verts.length];
-          const sa = worldToScreen(a.x, a.y);
-          const sb = worldToScreen(b.x, b.y);
+          const sa = worldToScreen(a.x, a.y), sb = worldToScreen(b.x, b.y);
           const vx = sb.x - sa.x, vy = sb.y - sa.y;
           const denom = (vx * vx + vy * vy) || 1;
           const t = ((sc.x - sa.x) * vx + (sc.y - sa.y) * vy) / denom;
@@ -2081,24 +2112,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const px = sa.x + vx * tt, py = sa.y + vy * tt;
           const d = Math.hypot(sc.x - px, sc.y - py);
           if (d < bestEdge.d) {
-            const worldProj = { x: a.x + (b.x - a.x) * tt, y: a.y + (b.y - a.y) * tt };
-            bestEdge = { d, aIdx: i, bIdx: (i + 1) % verts.length, proj: worldProj };
+            bestEdge = { d, aIdx: i, bIdx: (i + 1) % verts.length, proj: { x: a.x + (b.x - a.x) * tt, y: a.y + (b.y - a.y) * tt } };
           }
         }
-        
-        // Если клик близко к ребру — возвращаем ребро
         if (bestEdge.proj && bestEdge.d <= getEdgePickThreshold() * 1.2) {
           return { point: bestEdge.proj, vertexIndex: null, edge: { aIdx: bestEdge.aIdx, bIdx: bestEdge.bIdx } };
         }
-        
-        // 3) Если ничего не нашли, но у фигуры есть вершины — возвращаем ближайшую вершину
-        // (для построений всегда нужна вершина)
         if (constructionMode && bestV.idx >= 0) {
           return { point: verts[bestV.idx], vertexIndex: bestV.idx, edge: null };
         }
       }
-      
-      // По умолчанию — точка в мире
       return { point: w, vertexIndex: null, edge: null };
     }
     
@@ -2354,14 +2377,39 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // 2) Режим построений
       if (constructionMode) {
-        if (!activeShape) { 
-          console.info('Сначала выберите фигуру для построения.'); 
-          return; 
+        if (!activeShape) {
+          console.info('Сначала выберите фигуру для построения.');
+          return;
         }
         ensureConstructions(activeShape);
         const found = findVertexOrEdgePoint(e.clientX, e.clientY, activeShape);
-        
-        // Автопривязка к вершине — если близко к вершине, используем вершину
+
+        // Для сечений — просто добавляем точки
+        if (constructionType === 'section') {
+          if (found && found.point) {
+            constructionTemp.points.push(found);
+            console.info(`Точка ${constructionTemp.points.length}/3 поставлена`);
+            
+            // Если 3 точки — строим сечение
+            if (constructionTemp.points.length >= 3) {
+              const points = constructionTemp.points.map(p => p.point);
+              const cons = buildSection(points, activeShape);
+              if (cons) {
+                cons.forEach(c => { c.id = uid('cons'); activeShape.constructions.push(c); });
+                constructionTemp.points = [];
+                constructionMode = false;
+                constructionType = null;
+                updatePropsPanel && updatePropsPanel(activeShape);
+                console.info('Сечение построено!');
+              }
+            }
+          } else {
+            console.info('Кликните по 3D фигуре!');
+          }
+          return;
+        }
+
+        // Для медианы/биссектрисы — привязка к вершине
         if (found && found.vertexIndex === null && typeof activeShape.getVerticesWorld === 'function') {
           const verts = activeShape.getVerticesWorld();
           let best = { d: Infinity, idx: -1 };
@@ -2370,14 +2418,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const d = Math.hypot(sc.x - s.x, sc.y - s.y);
             if (d < best.d) best = { d, idx: i };
           });
-          // Если вершина близко — привязываемся к ней
           if (best.d <= getVertexPickThreshold()) {
             found.vertexIndex = best.idx;
             found.point = verts[best.idx];
             found.edge = null;
           }
         }
-        
+
         if (!found) return;
         constructionTemp.points.push(found);
 
@@ -2626,46 +2673,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
-      // 3) Обычный выбор фигуры — увеличенный padding для удобства
+      // 3) Обычный выбор фигуры
       let hit = null;
       for (let i = shapes.length - 1; i >= 0; i--) {
         const s = shapes[i];
         let hitted = false;
-        
-        // Сначала hitTest
+
+        // hitTest
         try { if (typeof s.hitTest === 'function') hitted = !!s.hitTest(w.x, w.y); } catch (err) {}
-        
-        // Если не попали по hitTest — проверяем bounding box с УВЕЛИЧЕННЫМ padding
+
+        // Bounding box с большим padding (40px)
         if (!hitted) {
           try {
             if (typeof s.getBoundingBox === 'function') {
               const bb = s.getBoundingBox();
-              // Увеличенный padding для удобного выбора (25px вместо 12-20)
-              const pad = s.constructions && s.constructions.length > 0 ? 28 : 25;
+              const pad = 40;
               if (bb && !Number.isNaN(bb.x)) {
-                if (w.x >= bb.x - pad && w.x <= bb.x + bb.w + pad && 
-                    w.y >= bb.y - pad && w.y <= bb.y + bb.h + pad) { 
-                  hitted = true; 
+                if (w.x >= bb.x - pad && w.x <= bb.x + bb.w + pad &&
+                    w.y >= bb.y - pad && w.y <= bb.y + bb.h + pad) {
+                  hitted = true;
                 }
               }
             }
           } catch (err) {}
         }
-        
-        // Дополнительно: если фигура имеет вершины — проверяем расстояние до них
+
+        // Вершины (50px)
         if (!hitted && typeof s.getVerticesWorld === 'function') {
           const verts = s.getVerticesWorld();
           for (const v of verts) {
-            if (Math.hypot(w.x - v.x, w.y - v.y) <= getVertexPickThreshold()) {
+            if (Math.hypot(w.x - v.x, w.y - v.y) <= 50) {
               hitted = true;
               break;
             }
           }
         }
-        
+
         if (hitted) { hit = s; break; }
       }
-      
+
       if (hit) {
         activeShape = hit;
         shapes.forEach(s => s.selected = false);
@@ -2676,7 +2722,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const idx = shapes.indexOf(activeShape);
         if (idx >= 0) { shapes.splice(idx, 1); shapes.push(activeShape); }
         if (typeof updatePropsPanel === 'function') updatePropsPanel(activeShape);
-        console.info(`Выбрана фигура: ${activeShape.constructor.name.replace('Shape', '')}`);
       } else {
         shapes.forEach(s => s.selected = false);
         activeShape = null;
