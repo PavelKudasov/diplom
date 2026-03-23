@@ -2332,7 +2332,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* ====== Pointer events ====== */
     canvasEl.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
+      // Не блокируем событие по умолчанию для мобильных — это мешает скроллу
+      const isMobile = window.innerWidth <= 1023;
+      if (!isMobile) {
+        e.preventDefault();
+      }
       try { canvasEl.setPointerCapture(e.pointerId); } catch (_) {}
       isMouseDown = true;
       const w = screenToWorld(e.clientX, e.clientY);
@@ -3328,11 +3332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startRot = 0;
 
     canvasEl.addEventListener('touchstart', (e) => {
-      // Блокируем стандартный скролл/зум на канвасе
-      if (e.touches.length >= 2) {
-        e.preventDefault();
-      }
-      
+      // Блокируем стандартный скролл/зум только если 2 пальца (трансформация фигуры)
       if (e.touches.length === 2 && activeShape) {
         touchMode = 'transform';
         const t1 = e.touches[0];
@@ -3343,12 +3343,12 @@ document.addEventListener('DOMContentLoaded', () => {
         touchStartAngle = Math.atan2(dy, dx);
         startScale = activeShape.scale || 1;
         startRot = activeShape.rotation || 0;
+        e.preventDefault(); // Блокируем только для 2 пальцев
       }
-    }, { passive: false });
+    }, { passive: true });
 
     canvasEl.addEventListener('touchmove', (e) => {
       if (touchMode === 'transform' && e.touches.length === 2 && activeShape) {
-        e.preventDefault();
         const t1 = e.touches[0];
         const t2 = e.touches[1];
         const dx = t2.clientX - t1.clientX;
@@ -3358,8 +3358,10 @@ document.addEventListener('DOMContentLoaded', () => {
         activeShape.scale = Math.max(0.1, startScale * (dist / touchStartDist));
         activeShape.rotation = startRot + (angle - touchStartAngle);
         if (typeof updatePropsPanel === 'function') updatePropsPanel(activeShape);
+        e.preventDefault(); // Блокируем только для трансформации
       }
-    }, { passive: false });
+      // Для 1 пальца — разрешаем скролл страницы (не вызываем preventDefault)
+    }, { passive: true });
 
     canvasEl.addEventListener('touchend', (e) => {
       if (e.touches.length < 2) {
