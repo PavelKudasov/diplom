@@ -1,0 +1,33 @@
+/* ====== ШРИФТЫ ====== */
+
+/* Подключаем Google Fonts — Manrope: современный, геометричный, отлично читается */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* Основной шрифт для всего приложения */
+:root {
+  --font-primary: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* Применяем ко всем элементам */
+* {
+  font-family: var(--font-primary);
+}
+
+/* Заголовки и важные элементы — жирнее */
+h1, h2, h3, h4, h5, h6,
+.head-inner .logo1,
+.panel-btn,
+.help-title {
+  font-weight: 700;
+}
+
+/* Моноширинный для кода/чисел */
+code, .mono, input[type="number"] {
+  font-family: var(--font-mono);
+}
+
+/* Плавное появление шрифта */
+html {
+  font-display: swap;
+}
